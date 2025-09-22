@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>معركة ناروتو - لعبة البطاقات</title>
+<title>تسجيل الدخول - لعبة ناروتو</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+/* إخفاء محتوى الموقع في البداية */
+#content {
+    display: none;
+}
 :root {
   --primary-color: #d42027;
   --secondary-color: #f5b316;
@@ -34,6 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Center content vertically */
   min-height: 100vh;
   position: relative;
   direction: rtl; /* Added for right-to-left alignment */
@@ -223,7 +228,7 @@ h2, h3, h4 {
     background: rgba(0, 0, 0, 0.9);
 }
 
-input[type="text"], input[type="number"], textarea {
+input[type="text"], input[type="number"], textarea, input[type="password"] {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--secondary-color);
   border-radius: 8px;
@@ -239,7 +244,7 @@ input[type="file"] {
     max-width: 100%;
 }
 
-input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+input[type="text"]:focus, input[type="number"]:focus, textarea:focus, input[type="password"]:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 5px var(--primary-color);
@@ -961,201 +966,310 @@ button.main:active {
   transform: translateY(0);
 }
 
+/* Styles for login page */
+#login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  background: rgba(26, 13, 15, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--secondary-color);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+#login-page h1 {
+  font-size: 3.5rem;
+  color: var(--primary-color);
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+}
+
+#login-page .input-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+#login-page .input-group label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--light-color);
+  margin-bottom: 5px;
+}
+
+#login-page .input-group input {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 1px solid var(--secondary-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--light-color);
+}
+
+#login-page .login-btn {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  background: linear-gradient(to bottom, var(--secondary-color), #d99c00);
+  color: var(--dark-color);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+#login-page .login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+#login-message {
+  color: var(--red-color);
+  font-weight: bold;
+  margin-top: 15px;
+  display: none;
+}
 </style>
+<script>
+    // بيانات تسجيل الدخول الصحيحة
+    const correctUsername = "naruto-card-clash";
+    const correctPassword = "katsuki123";
+
+    function validateLogin() {
+        const usernameInput = document.getElementById("username-input").value;
+        const passwordInput = document.getElementById("password-input").value;
+        const loginMessage = document.getElementById("login-message");
+
+        if (usernameInput === correctUsername && passwordInput === correctPassword) {
+            document.getElementById("login-page").style.display = "none";
+            document.getElementById("content").style.display = "flex";
+            document.title = "معركة ناروتو - لعبة البطاقات";
+            playBackgroundMusic();
+        } else {
+            loginMessage.textContent = "اسم المستخدم أو كلمة السر غير صحيحة.";
+            loginMessage.style.display = "block";
+        }
+    }
+</script>
 </head>
 <body>
 
-<div id="resizable-bg"></div>
-
-<div class="content-wrapper">
-  <div class="container">
-    <header>
-      <h1>معركة ناروتو - لعبة البطاقات</h1>
-      <p>قم بتحميل البطاقات وابدأ المعركة!</p>
-      <div id="round-counter" style="display:none;"></div>
-    </header>
-
-    <div id="bg-music-upload">
-      <label class="main">
-        تحميل موسيقى الخلفية
-        <input type="file" id="bg-music-file" accept="audio/*" style="display:none;">
-      </label>
+    <div id="login-page">
+        <h1>مرحبا بك في لعبة ناروتو للبطاقات</h1>
+        <div class="input-group">
+            <label for="username-input">Username:</label>
+            <input type="text" id="username-input" placeholder="أدخل اسم المستخدم">
+        </div>
+        <div class="input-group">
+            <label for="password-input">Password:</label>
+            <input type="password" id="password-input" placeholder="أدخل كلمة السر">
+        </div>
+        <button class="login-btn" onclick="validateLogin()">Continue</button>
+        <span id="login-message"></span>
     </div>
 
-    <div id="player1-interface" class="deck-selection">
-      <h2>⮞ Deck اللاعب 1</h2>
-      <label>عنوان Deck اللاعب 1: <input type="text" id="title1" placeholder="مثلاً فريق النار"></label>
-      <label id="deck1-part1-label">تحميل 6 بطاقات: <input type="file" id="deck1-part1" accept="image/*" multiple></label>
-      <label id="deck1-part2-label">تحميل 6 بطاقات: <input type="file" id="deck1-part2" accept="image/*" multiple></label>
-      <label id="deck1-part3-label">تحميل 3 بطاقات: <input type="file" id="deck1-part3" accept="image/*" multiple></label>
-      <h3>الجولات (1-15)</h3>
-      <div id="rounds-container1"></div>
-      
-      <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
-      <button class="main" id="next-to-player2">التالي: لاعب 2 →</button>
-    </div>
+    <div id="content">
+        <div id="resizable-bg"></div>
 
-    <div id="player2-interface" class="deck-selection" style="display:none;">
-      <h2>⮞ Deck اللاعب 2</h2>
-      <label>عنوان Deck اللاعب 2: <input type="text" id="title2" placeholder="مثلاً فريق الرياح"></label>
-      <label id="deck2-part1-label">تحميل 6 بطاقات: <input type="file" id="deck2-part1" accept="image/*" multiple></label>
-      <label id="deck2-part2-label">تحميل 6 بطاقات: <input type="file" id="deck2-part2" accept="image/*" multiple></label>
-      <label id="deck2-part3-label">تحميل 3 بطاقات: <input type="file" id="deck2-part3" accept="image/*" multiple></label>
-      <h3>الجولات (1-15)</h3>
-      <div id="rounds-container2"></div>
-      
-      <div class="file-control">
-          <button class="main" onclick="exportGameData()">تحميل الملف</button>
-          <label class="main">
-              استيراد الملف
-              <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importGameData(event)">
-          </label>
-      </div>
+        <div class="content-wrapper">
+          <div class="container">
+            <header>
+              <h1>معركة ناروتو - لعبة البطاقات</h1>
+              <p>قم بتحميل البطاقات وابدأ المعركة!</p>
+              <div id="round-counter" style="display:none;"></div>
+            </header>
 
-      <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
-      <button class="main" id="back-to-player1">← عودة: لاعب 1</button>
-      <button class="main" id="start-game-btn">بدء المعركة!</button>
-    </div>
-
-    <div id="match" style="display:none;">
-      <div class="players-container">
-        <div class="player">
-          <div class="player-name" id="player1-title">اللاعب 1</div>
-          <div class="card-and-abilities">
-            <div class="abilities-container-side">
-              <div class="ability-wrapper">
-                <h4>البطاقة السابقة</h4>
-                <div class="previous-card-container">
-                  <img id="previous-card1" src="">
-                </div>
-              </div>
-              <h4>القدرات</h4>
-              <div class="abilities-container" id="player1-abilities"></div>
-              <div class="add-ability">
-                <input id="new-ability1" placeholder="اكتب قدرة جديدة">
-                <button onclick="addAbility('player1')">أضف</button>
-              </div>
-            </div>
-            <div>
-              <label>تحميل بطاقة جديدة:
-                <input type="file" accept="image/*" onchange="replaceCard(event, 1)">
+            <div id="bg-music-upload">
+              <label class="main">
+                تحميل موسيقى الخلفية
+                <input type="file" id="bg-music-file" accept="audio/*" style="display:none;">
               </label>
-              <div class="card" id="player1-card">
-                <img id="card1" src="">
+            </div>
+
+            <div id="player1-interface" class="deck-selection">
+              <h2>⮞ Deck اللاعب 1</h2>
+              <label>عنوان Deck اللاعب 1: <input type="text" id="title1" placeholder="مثلاً فريق النار"></label>
+              <label id="deck1-part1-label">تحميل 6 بطاقات: <input type="file" id="deck1-part1" accept="image/*" multiple></label>
+              <label id="deck1-part2-label">تحميل 6 بطاقات: <input type="file" id="deck1-part2" accept="image/*" multiple></label>
+              <label id="deck1-part3-label">تحميل 3 بطاقات: <input type="file" id="deck1-part3" accept="image/*" multiple></label>
+              <h3>الجولات (1-15)</h3>
+              <div id="rounds-container1"></div>
+              
+              <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
+              <button class="main" id="next-to-player2">التالي: لاعب 2 →</button>
+            </div>
+
+            <div id="player2-interface" class="deck-selection" style="display:none;">
+              <h2>⮞ Deck اللاعب 2</h2>
+              <label>عنوان Deck اللاعب 2: <input type="text" id="title2" placeholder="مثلاً فريق الرياح"></label>
+              <label id="deck2-part1-label">تحميل 6 بطاقات: <input type="file" id="deck2-part1" accept="image/*" multiple></label>
+              <label id="deck2-part2-label">تحميل 6 بطاقات: <input type="file" id="deck2-part2" accept="image/*" multiple></label>
+              <label id="deck2-part3-label">تحميل 3 بطاقات: <input type="file" id="deck2-part3" accept="image/*" multiple></label>
+              <h3>الجولات (1-15)</h3>
+              <div id="rounds-container2"></div>
+              
+              <div class="file-control">
+                  <button class="main" onclick="exportGameData()">تحميل الملف</button>
+                  <label class="main">
+                      استيراد الملف
+                      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importGameData(event)">
+                  </label>
               </div>
-              <div class="card-stats">
-                  <div class="stat-group">
-                      <label for="def1">DEF</label>
-                      <input type="number" id="def1" min="0">
+
+              <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
+              <button class="main" id="back-to-player1">← عودة: لاعب 1</button>
+              <button class="main" id="start-game-btn">بدء المعركة!</button>
+            </div>
+
+            <div id="match" style="display:none;">
+              <div class="players-container">
+                <div class="player">
+                  <div class="player-name" id="player1-title">اللاعب 1</div>
+                  <div class="card-and-abilities">
+                    <div class="abilities-container-side">
+                      <div class="ability-wrapper">
+                        <h4>البطاقة السابقة</h4>
+                        <div class="previous-card-container">
+                          <img id="previous-card1" src="">
+                        </div>
+                      </div>
+                      <h4>القدرات</h4>
+                      <div class="abilities-container" id="player1-abilities"></div>
+                      <div class="add-ability">
+                        <input id="new-ability1" placeholder="اكتب قدرة جديدة">
+                        <button onclick="addAbility('player1')">أضف</button>
+                      </div>
+                    </div>
+                    <div>
+                      <label>تحميل بطاقة جديدة:
+                        <input type="file" accept="image/*" onchange="replaceCard(event, 1)">
+                      </label>
+                      <div class="card" id="player1-card">
+                        <img id="card1" src="">
+                      </div>
+                      <div class="card-stats">
+                          <div class="stat-group">
+                              <label for="def1">DEF</label>
+                              <input type="number" id="def1" min="0">
+                          </div>
+                          <div class="stat-group">
+                              <label for="atk1">ATK</label>
+                              <input type="number" id="atk1" min="0">
+                          </div>
+                          <button class="reset-button" onclick="resetStats(1)">Reset</button>
+                      </div>
+                      <div class="hp-control">
+                        <label>نقاط الصحة (HP)</label>
+                        <div class="buttons">
+                          <button class="minus" onclick="changeHP(1, -1)">-</button>
+                          <input type="number" id="hp1" value="15" min="0">
+                          <button class="plus" onclick="changeHP(1, 1)">+</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="stat-group">
-                      <label for="atk1">ATK</label>
-                      <input type="number" id="atk1" min="0">
+                </div>
+
+                <div class="player">
+                  <div class="player-name" id="player2-title">اللاعب 2</div>
+                  <div class="card-and-abilities">
+                    <div>
+                      <label>تحميل بطاقة جديدة:
+                        <input type="file" accept="image/*" onchange="replaceCard(event, 2)">  </label>
+                      <div class="card" id="player2-card">
+                        <img id="card2" src="">
+                      </div>
+                      <div class="card-stats">
+                          <div class="stat-group">
+                              <label for="def2">DEF</label>
+                              <input type="number" id="def2" min="0">
+                          </div>
+                          <div class="stat-group">
+                              <label for="atk2">ATK</label>
+                              <input type="number" id="atk2" min="0">
+                          </div>
+                          <button class="reset-button" onclick="resetStats(2)">Reset</button>
+                      </div>
+                      <div class="hp-control">
+                        <label>نقاط الصحة (HP)</label>
+                        <div class="buttons">
+                          <button class="minus" onclick="changeHP(2, -1)">-</button>
+                          <input type="number" id="hp2" value="15" min="0">
+                          <button class="plus" onclick="changeHP(2, 1)">+</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="abilities-container-side">
+                      <div class="ability-wrapper">
+                        <h4>البطاقة السابقة</h4>
+                        <div class="previous-card-container">
+                          <img id="previous-card2" src="">
+                        </div>
+                      </div>
+                      <h4>القدرات</h4>
+                      <div class="abilities-container" id="player2-abilities"></div>
+                      <div class="add-ability">
+                        <input id="new-ability2" placeholder="اكتب قدرة جديدة">
+                        <button onclick="addAbility('player2')">أضف</button>
+                      </div>
+                    </div>
                   </div>
-                  <button class="reset-button" onclick="resetStats(1)">Reset</button>
-              </div>
-              <div class="hp-control">
-                <label>نقاط الصحة (HP)</label>
-                <div class="buttons">
-                  <button class="minus" onclick="changeHP(1, -1)">-</button>
-                  <input type="number" id="hp1" value="15" min="0">
-                  <button class="plus" onclick="changeHP(1, 1)">+</button>
                 </div>
               </div>
+              
+              <div class="player-notes-container">
+                <div class="player-notes left">
+                  <label>Player Notes:</label>
+                  <div class="note-shortcuts" id="shortcuts1">
+                    </div>
+                  <textarea id="notes1" rows="2" placeholder="Typing notes here..."></textarea>
+                </div>
+                <div class="player-notes right">
+                  <label>Player Notes:</label>
+                  <div class="note-shortcuts" id="shortcuts2">
+                    </div>
+                  <textarea id="notes2" rows="2" placeholder="Typing notes here..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div id="navigation">
+              <button class="main" onclick="prevRound()">← السابق</button>
+              <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
+              <button class="main" onclick="nextRound()">التالي →</button>
             </div>
           </div>
-        </div>
 
-        <div class="player">
-          <div class="player-name" id="player2-title">اللاعب 2</div>
-          <div class="card-and-abilities">
-            <div>
-              <label>تحميل بطاقة جديدة:
-                <input type="file" accept="image/*" onchange="replaceCard(event, 2)">  </label>
-              <div class="card" id="player2-card">
-                <img id="card2" src="">
-              </div>
-              <div class="card-stats">
-                  <div class="stat-group">
-                      <label for="def2">DEF</label>
-                      <input type="number" id="def2" min="0">
-                  </div>
-                  <div class="stat-group">
-                      <label for="atk2">ATK</label>
-                      <input type="number" id="atk2" min="0">
-                  </div>
-                  <button class="reset-button" onclick="resetStats(2)">Reset</button>
-              </div>
-              <div class="hp-control">
-                <label>نقاط الصحة (HP)</label>
-                <div class="buttons">
-                  <button class="minus" onclick="changeHP(2, -1)">-</button>
-                  <input type="number" id="hp2" value="15" min="0">
-                  <button class="plus" onclick="changeHP(2, 1)">+</button>
-                </div>
-              </div>
-            </div>
-            <div class="abilities-container-side">
-              <div class="ability-wrapper">
-                <h4>البطاقة السابقة</h4>
-                <div class="previous-card-container">
-                  <img id="previous-card2" src="">
-                </div>
-              </div>
-              <h4>القدرات</h4>
-              <div class="abilities-container" id="player2-abilities"></div>
-              <div class="add-ability">
-                <input id="new-ability2" placeholder="اكتب قدرة جديدة">
-                <button onclick="addAbility('player2')">أضف</button>
-              </div>
+          <div id="zoom-modal">
+            <img id="zoom-img" src="">
+            <div class="transparency-control">
+              <label for="transparency-slider">الشفافية:</label>
+              <input type="range" id="transparency-slider" min="0" max="100" value="95">
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div class="player-notes-container">
-        <div class="player-notes left">
-          <label>Player Notes:</label>
-          <div class="note-shortcuts" id="shortcuts1">
-            </div>
-          <textarea id="notes1" rows="2" placeholder="Typing notes here..."></textarea>
-        </div>
-        <div class="player-notes right">
-          <label>Player Notes:</label>
-          <div class="note-shortcuts" id="shortcuts2">
-            </div>
-          <textarea id="notes2" rows="2" placeholder="Typing notes here..."></textarea>
-        </div>
-      </div>
-    </div>
 
-    <div id="navigation">
-      <button class="main" onclick="prevRound()">← السابق</button>
-      <button class="main" onclick="toggleFogEffect()">تفعيل / إلغاء ضباب البطاقات</button>
-      <button class="main" onclick="nextRound()">التالي →</button>
+          <div class="status-message" id="status-message"></div>
+          
+          <div id="audio-controls">
+            <button id="mute-btn" title="كتم/إلغاء كتم الصوت">🔊</button>
+            <input type="range" id="volume-slider" min="0" max="100" value="50" title="مستوى الصوت">
+            <button id="fullscreen-btn" title="ملء الشاشة">
+              <span id="fullscreen-icon">⛶</span>
+            </button>
+          </div>
+          
+          <audio id="background-music" loop></audio>
+        </div>
     </div>
-  </div>
-
-  <div id="zoom-modal">
-    <img id="zoom-img" src="">
-    <div class="transparency-control">
-      <label for="transparency-slider">الشفافية:</label>
-      <input type="range" id="transparency-slider" min="0" max="100" value="95">
-    </div>
-  </div>
-
-  <div class="status-message" id="status-message"></div>
-  
-  <div id="audio-controls">
-    <button id="mute-btn" title="كتم/إلغاء كتم الصوت">🔊</button>
-    <input type="range" id="volume-slider" min="0" max="100" value="50" title="مستوى الصوت">
-    <button id="fullscreen-btn" title="ملء الشاشة">
-      <span id="fullscreen-icon">⛶</span>
-    </button>
-  </div>
-  
-  <audio id="background-music" loop></audio>
-</div>
 
 <script>
 let backgroundMusic = null;
@@ -1883,8 +1997,6 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.textContent = '⛶';
       }
     });
-
-    playBackgroundMusic();
 });
 </script>
 </body>
