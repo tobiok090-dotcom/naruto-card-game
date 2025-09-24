@@ -1098,9 +1098,23 @@ button.main:active {
             <div id="player1-interface" class="deck-selection">
               <h2>⮞ Deck اللاعب 1</h2>
               <label>عنوان Deck اللاعب 1: <input type="text" id="title1" placeholder="مثلاً فريق النار"></label>
-              <label id="deck1-part1-label">تحميل 6 بطاقات: <input type="file" id="deck1-part1" accept="image/*" multiple></label>
-              <label id="deck1-part2-label">تحميل 6 بطاقات: <input type="file" id="deck1-part2" accept="image/*" multiple></label>
-              <label id="deck1-part3-label">تحميل 3 بطاقات: <input type="file" id="deck1-part3" accept="image/*" multiple></label>
+              
+              <div class="file-control">
+                  <label class="main">
+                      تحميل 6 بطاقات عادية
+                      <input type="file" id="deck1-part1" accept="image/*" multiple style="display:none;">
+                  </label>
+                  <label class="main">
+                      تحميل 6 بطاقات نادرة
+                      <input type="file" id="deck1-part2" accept="image/*" multiple style="display:none;">
+                  </label>
+                  <label class="main">
+                      تحميل 3 بطاقات أسطورية
+                      <input type="file" id="deck1-part3" accept="image/*" multiple style="display:none;">
+                  </label>
+              </div>
+              <button class="main" onclick="drawRandomDeck(1)">🎲 سحب بطاقات عشوائية (3 أسطورية + 6 نادرة + 6 عادية)</button>
+              
               <h3>الجولات (1-15)</h3>
               <div id="rounds-container1"></div>
               
@@ -1111,9 +1125,23 @@ button.main:active {
             <div id="player2-interface" class="deck-selection" style="display:none;">
               <h2>⮞ Deck اللاعب 2</h2>
               <label>عنوان Deck اللاعب 2: <input type="text" id="title2" placeholder="مثلاً فريق الرياح"></label>
-              <label id="deck2-part1-label">تحميل 6 بطاقات: <input type="file" id="deck2-part1" accept="image/*" multiple></label>
-              <label id="deck2-part2-label">تحميل 6 بطاقات: <input type="file" id="deck2-part2" accept="image/*" multiple></label>
-              <label id="deck2-part3-label">تحميل 3 بطاقات: <input type="file" id="deck2-part3" accept="image/*" multiple></label>
+              
+              <div class="file-control">
+                  <label class="main">
+                      تحميل 6 بطاقات عادية
+                      <input type="file" id="deck2-part1" accept="image/*" multiple style="display:none;">
+                  </label>
+                  <label class="main">
+                      تحميل 6 بطاقات نادرة
+                      <input type="file" id="deck2-part2" accept="image/*" multiple style="display:none;">
+                  </label>
+                  <label class="main">
+                      تحميل 3 بطاقات أسطورية
+                      <input type="file" id="deck2-part3" accept="image/*" multiple style="display:none;">
+                  </label>
+              </div>
+              <button class="main" onclick="drawRandomDeck(2)">🎲 سحب بطاقات عشوائية (3 أسطورية + 6 نادرة + 6 عادية)</button>
+
               <h3>الجولات (1-15)</h3>
               <div id="rounds-container2"></div>
               
@@ -1452,6 +1480,7 @@ function placeCardsForGroup(files, containerId, groupIndex, count) {
   const copyFiles = [...files];
   const selectedFiles = [];
   
+  // Choose random cards from the uploaded files
   for (let i = 0; i < count; i++) {
     if (copyFiles.length === 0) break;
     const idx = Math.floor(Math.random() * copyFiles.length);
@@ -1479,17 +1508,26 @@ function placeCardsForGroup(files, containerId, groupIndex, count) {
   });
 }
 
-['deck1-part1', 'deck1-part2', 'deck1-part3'].forEach((id, index) => {
-  document.getElementById(id).addEventListener('change', e => {
-    placeCardsForGroup(Array.from(e.target.files), 'rounds-container1', index, [6, 6, 3][index]);
-  });
+document.getElementById('deck1-part1').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container1', 0, 6);
+});
+document.getElementById('deck1-part2').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container1', 1, 6);
+});
+document.getElementById('deck1-part3').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container1', 2, 3);
 });
 
-['deck2-part1', 'deck2-part2', 'deck2-part3'].forEach((id, index) => {
-  document.getElementById(id).addEventListener('change', e => {
-    placeCardsForGroup(Array.from(e.target.files), 'rounds-container2', index, [6, 6, 3][index]);
-  });
+document.getElementById('deck2-part1').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container2', 0, 6);
 });
+document.getElementById('deck2-part2').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container2', 1, 6);
+});
+document.getElementById('deck2-part3').addEventListener('change', e => {
+    placeCardsForGroup(Array.from(e.target.files), 'rounds-container2', 2, 3);
+});
+
 
 document.getElementById('next-to-player2').addEventListener('click', () => {
   document.getElementById('player1-interface').style.display = 'none';
@@ -1998,6 +2036,379 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 });
+// نظام السحب العشوائي للبطاقات
+const CARD_NAMES = {
+    Common: [
+        'Akamaru.jpeg',
+        'Anko.jpeg',
+        'Araya.jpeg',
+        'Asuma.jpeg',
+        'Baki.jpeg',
+        'Boruto Uzumaki.jpeg',
+        'Cho tcho.jpeg',
+        'Choper.jpeg',
+        'Chouji 2.jpeg',
+        'Dan.jpeg',
+        'Denki.jpeg',
+        'Dosu.jpeg',
+        'Ebisu.jpeg',
+        'Gara.jpeg',
+        'Gato.jpeg',
+        'Haku.jpeg',
+        'Hayate.jpeg',
+        'Hima.jpeg',
+        'Himawari.jpeg',
+        'Hinata.jpeg',
+        'Ibiki.jpeg',
+        'Inari.jpeg',
+        'Ino yamanaka.jpeg',
+        'Inojin.jpeg',
+        'Iruka.jpeg',
+        'Itachi Uchiha.jpeg',
+        'Iwabe.jpeg',
+        'Izumo.jpeg',
+        'Jiraya.jpeg',
+        'Jirobo.jpeg',
+        'Kabuto.jpeg',
+        'Kakashi copie.jpeg',
+        'Kankuro.jpeg',
+        'Karura.jpeg',
+        'Kiba.jpeg',
+        'Kidomaro.jpeg',
+        'Kimimaro.jpeg',
+        'Kagumaro.jpeg',
+        'Kisame.jpeg',
+        'Konoha.jpeg',
+        'Konohamaru.jpeg',
+        'Kotetsu.jpeg',
+        'Kurenai.jpeg',
+        'Kurio Hako.jpeg',
+        'Metal Lee.jpeg',
+        'Might guy.jpeg',
+        'Mitsuki.jpeg',
+        'Mizuki.jpeg',
+        'Mugino.jpeg',
+        'Namida.jpeg',
+        'Naruto raseyubi.jpeg',
+        'Ramen girl.jpeg',
+        'Narutogan.jpeg',
+        'Neji hyuga.jpeg',
+        'Oruchimaro.jpeg',
+        'Naruto.jpeg',
+        'Narutokyubi.jpeg',
+        'Ramen.jpeg',
+        'Rock lee.jpeg',
+        'Sakon _ ukon.jpeg',
+        'Sakura trash.jpeg',
+        'Sarada Uchiha.jpeg',
+        'Sarutobi Hiruzen.jpeg',
+        'Sasuke Uchiha _66d183.jpeg',
+        'Sasuke3fn.jpeg',
+        'Sasuke.jpeg',
+        'Sasukechunin.jpeg',
+        'Sasuke Uchiha 3.jpeg',
+        'Shikadai Nara.jpeg',
+        'Shikanara.jpeg',
+        'Shinki.jpeg',
+        'Shino Aborami.jpeg',
+        'Shino.jpeg',
+        'Sumire.jpeg',
+        'Tayuya.jpeg',
+        'Tazuna.jpeg',
+        'Temarishika.jpeg',
+        'Temari.jpeg',
+        'Ten ten.jpeg',
+        'Tshuzuni.jpeg',
+        'Tsubaki.jpeg',
+        'Tsunade.jpeg',
+        'Wasabi.jpeg',
+        'Udon.jpeg',
+        'Zabuza.jpeg',
+        '_Hako.jpeg'
+    ],
+    Rare: [
+        'Amano Ringo.jpeg',
+        'Ashura Otsutsuki.jpeg',
+        'Chiyo Shippuden.jpeg',
+        'Chouji Shippuden.jpeg',
+        'Chukaku.jpeg',
+        'Danzo izanagi.jpeg',
+        'Danzo anbu.jpeg',
+        'Darui.jpeg',
+        'Deidara.jpeg',
+        'Foo Yamanaka.jpeg',
+        'Fugako Uchiha.jpeg',
+        'Fuguki.jpeg',
+        'Fuu.jpeg',
+        'Hamura Otsutsuki.jpeg',
+        'Gara Kazekage.jpeg',
+        'Han.jpeg',
+        'HANZO.jpeg',
+        'Hashirama Senju.jpeg',
+        'Hinata Shippuden.jpeg',
+        'Indra Otsutsuki.jpeg',
+        'Ino Shippuden.jpeg',
+        'Itachi susano.jpeg',
+        'Itachi yata.jpeg',
+        'Jinbachi Munashi.jpeg',
+        'Jinjin Akebino.jpeg',
+        'Jirayadie.jpeg',
+        'Juzo.jpeg',
+        'Kaguyamini.jpeg',
+        'Kakashi kamui.jpeg',
+        'kakozo.jpeg',
+        'kakuzo5.jpeg',
+        'Hiddan.jpeg',
+        'Kankoro Shippuden.jpeg',
+        'Karen Uzumaki.jpeg',
+        'Kiba Shippuden.jpeg',
+        'Gyuki.jpeg',
+        'Killerap.jpeg',
+        'Killer Bee.jpeg',
+        'Kinkaku -Ginkaku.jpeg',
+        'Konohamaru Shippuden.jpeg',
+        'Kushimaru.jpeg',
+        'Kushina Uzumaki.jpeg',
+        'Madara edo.jpeg',
+        'Madara life.jpeg',
+        'Mengetsu.jpeg',
+        'Mifune.jpeg',
+        'Mei Mizokage.jpeg',
+        'Mightduy.jpeg',
+        'Minato Edo.jpeg',
+        'Minato kcm1.jpeg',
+        'Minato Namikaze.jpeg',
+        'Mu.jpeg',
+        'Nagato-Pain.jpeg',
+        'Nagato Uzumaki.jpeg',
+        'Naruto back.jpeg',
+        'Naruto chakerakyubi.jpeg',
+        'Naruto sagerasen.jpeg',
+        'Naruto sagemode.jpeg',
+        'Naruto kcm1rase.jpeg',
+        'Naruto kcm2.jpeg',
+        'Naruto shurekin.jpeg',
+        'Neji Shippuden.jpeg',
+        'Sae Shippuden.jpeg',
+        'Sakumo Hatake.jpeg',
+        'Sakura chanaru.jpeg',
+        'Sakura health.jpeg',
+        'Sakura byakugo.jpeg',
+        'Sakura Haruno.jpeg',
+        'Sasori aka.jpeg',
+        'Sasori.jpeg',
+        'Sasuke Akatsuki.jpeg',
+        'Sasuke kiren.jpeg',
+        'Sasuke fuijin.jpeg',
+        'Sasuke mangekyo.jpeg',
+        'Sasuke susano.jpeg',
+        'Sasuke Shidori.jpeg',
+        'Sasuke Shippuden.jpeg',
+        'Shikamaru Shippuden.jpeg',
+        'Shino Shippuden.jpeg',
+        'Shiriko.jpeg',
+        'Suigetsu.jpeg',
+        'Temari Shippuden.jpeg',
+        'Tenten Shippuden.jpeg',
+        'Tobi.jpeg',
+        'Tobirama edo.jpeg',
+        'Tobirama Senju.jpeg',
+        'Torune.jpeg',
+        'Tsunade Senju.jpeg',
+        'Yagura.jpeg',
+        'Yamato.jpeg',
+        'Yugito Nii.jpeg',
+        'Shisui susano.jpeg',
+        'Shisui Uchiha.jpeg',
+        'Zetsu Akatsuki.jpeg',
+    ],
+    Legendary: [
+        'ALL FOR ONE.jpeg',
+        'Aizen Sosuke (1).jpeg',
+        'All Might.jpeg',
+        'Asta Black Clover.jpeg',
+        'Ban Natatsu No Taizai (1).jpeg',
+        'Chrolo Lucifer .jpeg',
+        'Crow Zetsu.jpeg',
+        'Elizabeth .jpeg',
+        'Eri Tchan.jpeg',
+        'Escanor .jpeg',
+        'Getou.jpeg',
+        'Gojo satoru _79ea8b.jpeg',
+        'Hagorumo Otsutsuki.jpeg',
+        'Hisoka.jpeg',
+        'Ishigami Senku.jpeg',
+        'Itachi edo.jpeg',
+        'Jubito.jpeg',
+        'Kabuto Shippuden .jpeg',
+        'Kaguya Otsutsuki.jpeg',
+        'Kaido.jpeg',
+        'Kakashi hatake .jpeg',
+        'Limilion (1).jpeg',
+        'Madara War.jpeg',
+        'Madara susano.jpeg',
+        'Madara perfect.jpeg',
+        'Madara early.jpeg',
+        'Madara rekudo.jpeg',
+        'Marshal D Tetch (1).jpeg',
+        'Sate.jpeg',
+        'Mightguy.jpeg',
+        'Mihawk.jpeg',
+        'Monkey D Luffy.jpeg',
+        'Musachi.jpeg',
+        'Nagato.jpeg',
+        'Naruto kurama.jpeg',
+        'Naruto rekudo.jpeg',
+        'Naruto baryon.jpeg',
+        'Sasuke last.jpeg',
+        'Sanji Vinsmoke.jpeg',
+        'Sasuke Uchiha _5182c5.jpeg',
+        'Sukuna.jpeg',
+        'Sung Jin woo.jpeg',
+        'Todoroki Shoto.jpeg',
+        'Trafalgar D Water Law_b84892.jpeg',
+        'Uchiha obito (1).jpeg',
+        'Uchiha obito.jpeg',
+        'Yagami Light.jpeg',
+        'Yami Sekuhiro.jpeg',
+        'Yuno Black Clover.jpeg',
+        'Zenin Touji.jpeg',
+    ]
+};
+
+
+const CARD_CONFIG = {
+    baseUrl: 'https://raw.githubusercontent.com/tobiok090-dotcom/naruto-card-game/main/naruto-card-game/Cards/',
+    pullCounts: {
+        Common: 6,
+        Rare: 6,
+        Legendary: 3
+    }
+};
+
+// دالة للحصول على اسم البطاقة حسب الفهرس
+function getCardName(type, index) {
+    if (CARD_NAMES[type] && CARD_NAMES[type][index - 1]) {
+        return CARD_NAMES[type][index - 1];
+    }
+    return null;
+}
+
+// دالة لسحب بطاقات عشوائية
+function drawRandomCards(cardType, count) {
+    const drawnCards = [];
+    const availableIndices = [];
+    
+    for (let i = 1; i <= CARD_NAMES[cardType].length; i++) {
+        availableIndices.push(i);
+    }
+    
+    for (let i = 0; i < count && availableIndices.length > 0; i++) {
+        const randomIndex = Math.floor(Math.random() * availableIndices.length);
+        const cardIndex = availableIndices[randomIndex];
+        
+        const cardName = getCardName(cardType, cardIndex);
+        if (!cardName) continue;
+        
+        drawnCards.push({
+            type: cardType,
+            name: cardName.replace('.jpeg', ''),
+            url: `${CARD_CONFIG.baseUrl}${cardType}/${cardName}`,
+            id: `${cardType}_${cardIndex}`,
+            index: cardIndex
+        });
+        
+        availableIndices.splice(randomIndex, 1);
+    }
+    
+    return drawnCards;
+}
+
+// دالة لسحب مجموعة كاملة للاعب
+function drawPlayerDeck() {
+    const playerCards = [];
+    
+    try {
+        playerCards.push(...drawRandomCards('Legendary', CARD_CONFIG.pullCounts.Legendary));
+        playerCards.push(...drawRandomCards('Rare', CARD_CONFIG.pullCounts.Rare));
+        playerCards.push(...drawRandomCards('Common', CARD_CONFIG.pullCounts.Common));
+    } catch (error) {
+        console.error('خطأ في سحب البطاقات:', error);
+    }
+    
+    return playerCards;
+}
+
+// دالة لتحميل البطاقات المسحوبة في الواجهة
+function loadDrawnCards(cards, containerId, deck) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    
+    cards.forEach((card, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'round-slot';
+        slot.setAttribute('data-round', index + 1);
+        slot.setAttribute('data-index', index);
+
+        const span = document.createElement('span');
+        span.textContent = index + 1;
+        slot.appendChild(span);
+
+        const img = document.createElement('img');
+        img.src = card.url;
+        img.onerror = function() {
+            this.src = 'images/back.png';
+            console.error('فشل تحميل البطاقة:', card.url);
+        };
+        slot.appendChild(img);
+
+        const cardActions = document.createElement('div');
+        cardActions.className = 'card-actions';
+
+        const audioLabel = document.createElement('label');
+        audioLabel.textContent = '🔊';
+        audioLabel.htmlFor = `card-audio-${containerId.includes('1') ? 1 : 2}-${index}`;
+
+        const audioInput = document.createElement('input');
+        audioInput.type = 'file';
+        audioInput.id = `card-audio-${containerId.includes('1') ? 1 : 2}-${index}`;
+        audioInput.accept = 'audio/*';
+        audioInput.style.display = 'none';
+        
+        audioInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const player = containerId.includes('1') ? 1 : 2;
+            addSoundToCard(index, file, player);
+        });
+
+        cardActions.appendChild(audioLabel);
+        cardActions.appendChild(audioInput);
+        slot.appendChild(cardActions);
+        
+        container.appendChild(slot);
+        
+        // تحديث البيانات في الـ deck
+        deck[index] = new Card(card.url, null);
+        
+        setupSlotEvents(slot);
+    });
+}
+// دالة لسحب البطاقات لكل لاعب
+function drawRandomDeck(player) {
+    const cards = drawPlayerDeck();
+    const containerId = `rounds-container${player}`;
+    const deck = player === 1 ? deck1 : deck2;
+    
+    // تفريغ البطاقات الحالية
+    for (let i = 0; i < totalRounds; i++) {
+        deck[i] = new Card('images/back.png', null);
+    }
+    
+    loadDrawnCards(cards, containerId, deck);
+    
+    console.log(`تم سحب ${cards.length} بطاقة للاعب ${player}`);
+    showStatus(`تم سحب البطاقات للاعب ${player} بنجاح!`);
+}
 </script>
 </body>
 </html>
