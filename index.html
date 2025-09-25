@@ -396,7 +396,7 @@ button.main:active {
 
 /* New foggy class for cards only */
 .card-foggy {
-    filter: blur(10px) brightness(0.7);
+    filter: blur(20px) brightness(0.3);
 }
 
 .hp-control {
@@ -1421,6 +1421,16 @@ function playCardSound(cardIndex, player) {
         }
     });
 }
+// SENSITIVE TO FOG STATE
+function isFogEnabled() {
+    // نتحقق من وجود فئة الضباب على أي بطاقة
+    const card1Img = document.getElementById('card1');
+    const firstSlotImg = document.querySelector('.round-slot img'); 
+    
+    // إذا كانت أي من هذه الصور موجودة وتحتوي على الفئة 'card-foggy'
+    return (card1Img && card1Img.classList.contains('card-foggy')) || 
+           (firstSlotImg && firstSlotImg.classList.contains('card-foggy'));
+}
 
 function Card(image, sound) {
     this.image = image;
@@ -2344,6 +2354,7 @@ function loadDrawnCards(cards, containerId, deck) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     
+    const fogIsActive = isFogEnabled();
     cards.forEach((card, index) => {
         const slot = document.createElement('div');
         slot.className = 'round-slot';
@@ -2361,6 +2372,10 @@ function loadDrawnCards(cards, containerId, deck) {
             console.error('فشل تحميل البطاقة:', card.url);
         };
         slot.appendChild(img);
+        
+if (fogIsActive) {
+    img.classList.add('card-foggy');
+}
 
         const cardActions = document.createElement('div');
         cardActions.className = 'card-actions';
